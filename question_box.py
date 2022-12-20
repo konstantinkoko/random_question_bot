@@ -23,7 +23,7 @@ class QuestionBox:
             # получение вопросов из базы данных
             # иначе вывод сообщения об ошибке
             try:
-                question_list = self.db.get_random_question(user_id)
+                question_list = [self.db.get_random_question(user_id) for i in range(2)]
             except Exception as ex:
                 print('question_db exeption', ex)
                 question_list = [{'question': 'Вопросы неожиданно закончились!'
@@ -35,3 +35,8 @@ class QuestionBox:
 
     def close(self):
         self.db.close_connection()
+    
+
+if __name__ == "__main__":
+    qb = QuestionBox()
+    print(qb.get_questions("123"))

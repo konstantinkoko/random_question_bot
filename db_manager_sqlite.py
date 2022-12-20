@@ -128,11 +128,4 @@ class DataBase:
 
 if __name__ == '__main__':
     db = DataBase()
-    #db.add_user(2, 'ne Kostya', 6, 1)
-    #db.delete_user(1)
-    #question_list = get_question()
-    #for question in question_list:
-    #    db.add_question(1, question)
-    #question = db.get_random_question(2)
-    #print(question)
-    #db.change_subscription(2,22)
+    print(db.get_random_question('123'))
