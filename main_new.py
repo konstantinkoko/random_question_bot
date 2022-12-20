@@ -22,6 +22,7 @@ def get_answer_keyboard(callback_data) -> InlineKeyboardMarkup:
 @dp.message_handler(commands=['start', 'help'])
 async def send_welcome(message: types.Message):
     await message.answer("Привет! Хочешь парочку вопросов?", reply_markup=start_keyboard)
+    question_box.add_user(message.from_user.id, message.from_user.first_name, message.chat.id, "1")
 
 @dp.callback_query_handler(text="ask me")
 async def ask_me(callback: types.CallbackQuery, state: FSMContext):

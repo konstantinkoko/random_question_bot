@@ -2,7 +2,7 @@ import sqlite3 as sql
 
 class DataBase:
     def __init__(self):
-        self.connection = sql.connect('ask_me_db')
+        self.connection = sql.connect('ask_me_db.sqlite')
 
         self.cursor = self.connection.cursor()
         self.cursor.execute('''
