@@ -15,17 +15,17 @@ question_box = QuestionBox()
 
 start_keyboard = InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton("Задай мне парочку вопросов!", callback_data="ask me"))
 
-def get_answer_keyboard(callback_data) -> InlineKeyboardMarkup:
+def get_answer_keyboard(callback_data: str) -> InlineKeyboardMarkup:
     return InlineKeyboardMarkup(row_width=1).add(InlineKeyboardButton("Ответ", callback_data=callback_data))
 
 
 @dp.message_handler(commands=['start', 'help'])
-async def send_welcome(message: types.Message):
+async def send_welcome(message: types.Message) -> None:
     await message.answer("Привет! Хочешь парочку вопросов?", reply_markup=start_keyboard)
-    question_box.add_user(message.from_user.id, message.from_user.first_name, message.chat.id, "1")
+    question_box.add_user(message.from_user.id, message.from_user.first_name, message.chat.id, True)
 
 @dp.callback_query_handler(text="ask me")
-async def ask_me(callback: types.CallbackQuery, state: FSMContext):
+async def ask_me(callback: types.CallbackQuery, state: FSMContext) -> None:
     question_list = question_box.get_questions(callback.from_user.id)
     data = await state.get_data()
     if "counter" not in data.keys():
@@ -46,7 +46,7 @@ async def ask_me(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
 
 @dp.callback_query_handler(Text(startswith="answer_"))
-async def get_answer(callback: types.CallbackQuery,  state: FSMContext):
+async def get_answer(callback: types.CallbackQuery,  state: FSMContext) -> None:
     data = await state.get_data()
     answer = data[callback.data]
     await callback.message.delete_reply_markup()

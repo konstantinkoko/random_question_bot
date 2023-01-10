@@ -1,7 +1,8 @@
 import sqlite3 as sql
 
 class DataBase:
-    def __init__(self):
+
+    def __init__(self) -> None:
         self.connection = sql.connect('ask_me_db.sqlite')
 
         self.cursor = self.connection.cursor()
@@ -34,11 +35,11 @@ class DataBase:
         print("Database opened successfully")
 
 
-    def close_connection(self):
+    def close_connection(self) -> None:
         self.connection.close()
 
 
-    def add_user(self, id, name, chat_id, subscription):
+    def add_user(self, id: int, name: str, chat_id: int, subscription: str) -> None:
         self.cursor.execute(f'''
             INSERT OR IGNORE INTO users(id, name, chat_id, subscription)
                 VALUES (?,?,?,?)                   
@@ -46,7 +47,7 @@ class DataBase:
         self.connection.commit()
 
 
-    def delete_user(self, id):
+    def delete_user(self, id: int) -> None:
         self.cursor.execute(f'''
             DELETE FROM users
                 WHERE id= ?
@@ -54,7 +55,7 @@ class DataBase:
         self.connection.commit()
 
 
-    def add_question(self, id, question):
+    def add_question(self, id: int, question: dict) -> None:
         self.cursor.execute(f'''
             INSERT OR IGNORE INTO questions( question, answer, comment, source, author)
                 VALUES (?,?,?,?,?)
@@ -72,7 +73,7 @@ class DataBase:
         self.add_random_question_info(id, question_id)
 
 
-    def add_random_question_info(self, user_id, question_id):
+    def add_random_question_info(self, user_id: int, question_id: int) -> None:
         self.cursor.execute(f'''
             INSERT INTO random_question(user_id, question_id)
                 VALUES (?,?)
@@ -80,7 +81,7 @@ class DataBase:
         self.connection.commit()
 
 
-    def get_random_question(self, id):
+    def get_random_question(self, id: int) -> dict:
         self.cursor.execute(f'''
             SELECT id FROM questions
                 WHERE NOT EXISTS (
@@ -108,24 +109,20 @@ class DataBase:
         return question
 
 
-    def change_subscription(self, id, subscription):
+    def change_subscription(self, id: int, subscription: bool) -> None:
         self.cursor.execute(f'''
             UPDATE users SET subscription = ?
                 WHERE id = ?
-            ''', (subscription, id))
+            ''', (int(subscription), id))
         self.connection.commit()
 
 
-    def get_subscription(self, id):
+    def get_subscription(self, id: int) -> int:
         self.cursor.execute(f'''
             SELECT subscription FROM users
                 WHERE id = ?
             ''', (id,))
         data = self.cursor.fetchall()
         subscription = data[0][0]
-        return subscription
+        return bool(subscription)
 
-
-if __name__ == '__main__':
-    db = DataBase()
-    print(db.get_random_question('123'))

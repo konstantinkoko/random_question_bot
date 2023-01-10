@@ -6,12 +6,10 @@ class QuestionBox:
     def __init__(self) -> None:
         self.db = db_manager.DataBase()
 
+    def add_user(self, id: int, name: str, chat_id: int, subscription: bool) -> None:
+        self.db.add_user(id, name, chat_id, int(subscription))
 
-    def add_user(self, id, name, chat_id, subscription):
-        self.db.add_user(id, name, chat_id, subscription)
-
-
-    def get_questions(self, user_id):
+    def get_questions(self, user_id: int) -> list[dict]:
         try:
             # парсинг вопросов
             question_list = parcer.get_questions()
@@ -31,12 +29,6 @@ class QuestionBox:
                                 'answer': 'Просим прощения за технические неполадки!!!',
                                 'comment': '----------------'}]
         return question_list
-    
 
-    def close(self):
+    def close(self) -> None:
         self.db.close_connection()
-    
-
-if __name__ == "__main__":
-    qb = QuestionBox()
-    print(qb.get_questions("123"))
